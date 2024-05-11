@@ -67,3 +67,44 @@ exports.getAllBooks = (req, res, next) => {
     .then((books) => res.status(200).json(books))
     .catch((error) => res.status(400).json({ error }));
 };
+
+exports.rateBook = async (req, res, next) => {
+  const { userId, rating } = req.body;
+
+  if (userId !== req.auth.userId) {
+    return res.status(401).json({ message: 'Unauthorized: You cannot rate on behalf of another user.' });
+  }
+
+  if (rating < 0 || rating > 5) {
+    return res.status(400).json({ message: "Rating must be between 0 and 5." });
+  }
+
+  try {
+    const book = await Book.findById(req.params.id);
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    const existingRating = book.ratings.find(r => r.userId === userId);
+    if (existingRating) {
+      return res.status(400).json({ message: "User has already rated this book" });
+    }
+
+    book.ratings.push({ userId: userId, grade: rating });
+
+    const totalRatings = book.ratings.length;
+    const sumRatings = book.ratings.reduce((acc, cur) => acc + cur.grade, 0);
+    book.averageRating = sumRatings / totalRatings;
+
+    await book.save();
+    res.status(200).json(book);
+  } catch (error) {
+    res.status(500).json({ message: "Error processing your request", error });
+  }
+};
+
+exports.getBestRating = (req, res, next) => {
+  Book.find().sort({ averageRating: -1 }).limit(3)
+    .then(books => res.status(200).json(books))
+    .catch(error => res.status(400).json({ error }));
+};

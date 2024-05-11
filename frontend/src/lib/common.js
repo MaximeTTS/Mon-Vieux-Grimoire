@@ -1,6 +1,20 @@
 import axios from 'axios';
 import { API_ROUTES } from '../utils/constants';
 
+// Fonction pour récupérer le jeton d'accès depuis le stockage local
+function getAccessToken() {
+  return localStorage.getItem('token');
+}
+
+// Fonction pour créer un en-tête d'autorisation
+function createAuthHeader() {
+  const token = getAccessToken();
+  if (token) {
+    return { Authorization: `Bearer ${token}` };
+  }
+  return {};
+}
+
 function formatBooks(bookArray) {
   return bookArray.map((book) => {
     const newBook = { ...book };
@@ -39,8 +53,8 @@ export async function getBooks() {
     const response = await axios({
       method: 'GET',
       url: `${API_ROUTES.BOOKS}`,
+      headers: createAuthHeader(), // Ajout de l'en-tête d'autorisation
     });
-    // eslint-disable-next-line array-callback-return
     const books = formatBooks(response.data);
     return books;
   } catch (err) {
@@ -54,6 +68,7 @@ export async function getBook(id) {
     const response = await axios({
       method: 'GET',
       url: `${API_ROUTES.BOOKS}/${id}`,
+      headers: createAuthHeader(), // Ajout de l'en-tête d'autorisation
     });
     const book = response.data;
     // eslint-disable-next-line no-underscore-dangle
