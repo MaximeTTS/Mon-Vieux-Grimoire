@@ -94,7 +94,7 @@ exports.rateBook = async (req, res, next) => {
 
     const totalRatings = book.ratings.length;
     const sumRatings = book.ratings.reduce((acc, cur) => acc + cur.grade, 0);
-    book.averageRating = sumRatings / totalRatings;
+    book.averageRating = (sumRatings / totalRatings).toFixed(1);
 
     await book.save();
     res.status(200).json(book);
