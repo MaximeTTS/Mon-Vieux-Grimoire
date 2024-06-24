@@ -14,6 +14,18 @@ Kévin me contacte pour me proposer de travailler avec lui en mutualisant nos co
 
 Développer le back-end du site de référencement et de notation de livres.
 
+## Technos
+
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=react,sass,figma,github,html,ts,vscode,nodejs,mongodb,express" />
+  </a>
+</p>
+
+Utilisation de `Figma` pour la maquette.<br>
+Utilisation de `React` pour le développement et de `Saas` pour le style.<br>
+Utilisation de `GitHub` pour le versionning.<br>
+
 ## Spécifications de l'API
 
 ### Routes et Autorisations
